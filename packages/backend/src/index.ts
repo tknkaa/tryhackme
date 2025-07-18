@@ -1,12 +1,14 @@
-import { Elysia, t } from "elysia";
+import { Elysia, t, Context } from "elysia";
 import cors from "@elysiajs/cors";
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/libsql";
 import { usersTable } from "./db/schema";
+import { auth } from "../auth"; 
 
-const db = drizzle(process.env.DB_FILE_NAME!);
+export const db = drizzle(process.env.DB_FILE_NAME!);
 
 const app = new Elysia()
+  .mount(auth.handler)
   .use(cors())
   .get("/", () => "Hi Elysia")
   .post(
@@ -28,6 +30,6 @@ const app = new Elysia()
       }),
     },
   )
-  .listen(3000);
+  .listen(3000)
 
 export type App = typeof app;

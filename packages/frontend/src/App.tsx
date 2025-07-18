@@ -1,5 +1,5 @@
 import { useActionState } from "react";
-import { client } from "./utils/client";
+import { client } from "./lib/client.ts";
 
 export default function App() {
   const handleClick = async () => {
