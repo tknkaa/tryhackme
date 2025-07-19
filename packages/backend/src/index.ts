@@ -26,7 +26,12 @@ const betterAuth = new Elysia({ name: "better-auth" })
 
 const app = new Elysia()
   .use(betterAuth)
-  .use(cors())
+  .use(
+    cors({
+      origin: true,
+      credentials: true,
+    }),
+  )
   .get("/", () => "Hi Elysia")
   .post(
     "/todo",
