@@ -1,15 +1,8 @@
 # tryhackme
 
-To install dependencies:
+I named this app 'tryhackme' because I thought it might have vulnerabilities, but it's actually a sample full-stack application.\
+I intended to use a CSS framework, but I got lazy and didn't write any CSS.
 
-```bash
-bun install
-```
-
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.2.17. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+- Frontend: React + Vite + Tanstack Query
+- Backend: Elysia + Drizzle
+- Authentication: Better Auth
