@@ -4,6 +4,7 @@ import "dotenv/config";
 import { todo } from "./db/schema";
 import { auth } from "../auth";
 import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 const betterAuth = new Elysia({ name: "better-auth" })
   .mount(auth.handler)
@@ -48,6 +49,19 @@ const app = new Elysia()
       body: t.Object({
         description: t.String(),
       }),
+    },
+  )
+  .get(
+    "/todo",
+    async ({ user }) => {
+      const todos = await db
+        .select()
+        .from(todo)
+        .where(eq(todo.userId, user.id));
+      return todos;
+    },
+    {
+      auth: true,
     },
   )
   .listen(3000);
