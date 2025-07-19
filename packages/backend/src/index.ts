@@ -1,11 +1,9 @@
 import { Elysia, t } from "elysia";
 import cors from "@elysiajs/cors";
 import "dotenv/config";
-import { drizzle } from "drizzle-orm/libsql";
 import { usersTable, todo } from "./db/schema";
 import { auth } from "../auth";
-
-export const db = drizzle(process.env.DB_FILE_NAME!);
+import { db } from "./db";
 
 const app = new Elysia()
   .mount(auth.handler)
