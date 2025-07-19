@@ -1,5 +1,6 @@
 import { useActionState } from "react";
 import { authClient } from "../../lib/auth-client";
+import { Navigate } from "react-router";
 
 export default function SignUp() {
   const formAction = async (_prev: string | null, formData: FormData) => {
@@ -13,12 +14,6 @@ export default function SignUp() {
         name,
       },
       {
-        onRequest: (_ctx) => {
-          // show loading
-        },
-        onSuccess: (_ctx) => {
-          // redirect to the dashboard
-        },
         onError: (ctx) => {
           alert(ctx.error.message);
         },
@@ -30,10 +25,12 @@ export default function SignUp() {
     }
     if (data) {
       // redirect
+      console.log(data);
     }
     return null;
   };
-  const [_error, action] = useActionState(formAction, null);
+  const [error, action] = useActionState(formAction, "init");
+  if (!error) return <Navigate replace to="/todo" />;
 
   return (
     <div>
@@ -41,9 +38,10 @@ export default function SignUp() {
         <label>email</label>
         <input name="email" />
         <label>password</label>
-        <input name="password" />
+        <input name="password" type="password" />
         <label>name</label>
         <input name="name" />
+        <button type="submit">sign up</button>
       </form>
     </div>
   );

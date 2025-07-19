@@ -1,7 +1,13 @@
 import { useActionState } from "react";
 import { client } from "../../lib/client";
+import { authClient } from "../../lib/auth-client";
+import { redirect } from "react-router";
 
 export default function ToDoList() {
+  const { data: session } = authClient.useSession();
+  if (!session) {
+    redirect("/");
+  }
   const formAction = async (_prevErro: string | null, formData: FormData) => {
     //TODO: validation with Zod
     const description = formData.get("description") as string;
@@ -18,6 +24,7 @@ export default function ToDoList() {
   const [_error, action] = useActionState(formAction, null);
   return (
     <div>
+      <div>Hello {session?.user.name}</div>
       <form action={action}>
         <label>todo description</label>
         <input name="description" />

@@ -1,15 +1,11 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-export const usersTable = sqliteTable("users_table", {
-  id: integer().primaryKey({ autoIncrement: true }),
-  name: text().notNull(),
-  age: integer().notNull(),
-  email: text().notNull().unique(),
-});
-
 export const todo = sqliteTable("todo", {
   id: integer().primaryKey({ autoIncrement: true }),
   description: text().notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
 });
 
 export const user = sqliteTable("user", {

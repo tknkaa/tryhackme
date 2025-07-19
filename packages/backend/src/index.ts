@@ -1,43 +1,45 @@
 import { Elysia, t } from "elysia";
 import cors from "@elysiajs/cors";
 import "dotenv/config";
-import { usersTable, todo } from "./db/schema";
+import { todo } from "./db/schema";
 import { auth } from "../auth";
 import { db } from "./db";
 
-const app = new Elysia()
+const betterAuth = new Elysia({ name: "better-auth" })
   .mount(auth.handler)
+  .macro({
+    auth: {
+      async resolve({ status, request: { headers } }) {
+        const session = await auth.api.getSession({
+          headers,
+        });
+
+        if (!session) return status(401);
+
+        return {
+          user: session.user,
+          session: session.session,
+        };
+      },
+    },
+  });
+
+const app = new Elysia()
+  .use(betterAuth)
   .use(cors())
   .get("/", () => "Hi Elysia")
   .post(
-    "/user",
-    async ({ body }) => {
-      const newUser: typeof usersTable.$inferInsert = {
-        name: body.name,
-        age: body.age,
-        email: body.email,
-      };
-      await db.insert(usersTable).values(newUser);
-      return body;
-    },
-    {
-      body: t.Object({
-        name: t.String(),
-        age: t.Number(),
-        email: t.String(),
-      }),
-    },
-  )
-  .post(
     "/todo",
-    async ({ body }) => {
+    async ({ body, user }) => {
       const newTodo: typeof todo.$inferInsert = {
         description: body.description,
+        userId: user.id,
       };
       await db.insert(todo).values(newTodo);
       return body;
     },
     {
+      auth: true,
       body: t.Object({
         description: t.String(),
       }),
